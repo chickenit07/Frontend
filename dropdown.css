@@ -1,0 +1,20 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+.dropdown:hover>.dropdown-menu {
+    display: block;
+    margin-top: 0px;
+    background-color: rgb(237, 245, 245);
+  }
+  
+  .dropdown>.dropdown-toggle:active {
+    /*Without this, clicking will make it sticky*/
+      pointer-events: none;
+  }
+  .dropdown-menu > .dropdown-item:hover{
+        background-color: rgb(211, 211, 211);
+  }
+  .dropdown-toggle:after{
+      content: none !important;
+  }
