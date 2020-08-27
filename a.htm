@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Picture-in-Picture Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <main>
+      <h1>Picture-in-Picture Demo 🎉</h1>
+      <div class="video-input">
+        <video width="320" height="240" controls id="videoElement">
+          <source src="demo.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <button id="togglePipButton">Toggle Picture-in-Picture Mode!</button>
+        <button id="togglePipButton2">Toggle Picture-in-Picture Mode!</button>
+        <button id="togglePipButton3">Toggle Picture-in-Picture Mode!</button>
+      </div>
+      <p id="loadingText" hidden="true">Loading video... Please wait...</p>
+    </main>
+    <script>
+      var list = document.getElementsByTagName("button");
+      for (let i = 0; i < list.length; i++) {
+        list[i].addEventListener("click", runPIPScripts());
+        list[i].addEventListener('click',() => {
+            window.open('https://google.com.vn');
+        })
+      }
+      // document.getElementById('togglePipButton').addEventListener('click',runPIPScripts());
+
+      function runPIPScripts() {
+        let pipWindow;
+        let video = document.getElementById("videoElement");
+        let togglePipButton = document.getElementById("togglePipButton");
+        var list = document.getElementsByTagName("button");
+        for (let i = 0; i < list.length; i++) {
+          list[i].addEventListener("click", async function (event) {
+            togglePipButton.disabled = true;
+            try {
+              if (video !== document.pictureInPictureElement)
+                await video.requestPictureInPicture();
+              else await document.exitPictureInPicture();
+            } catch (error) {
+              console.log(error);
+            } finally {
+              togglePipButton.disabled = false;
+            }
+          });
+        }
+
+        video.addEventListener("enterpictureinpicture", function (event) {
+          console.log("Entered PiP");
+          pipWindow = event.pictureInPictureWindow;
+          console.log(
+            `Window size -  \n Width: ${pipWindow.width} \n Height: ${pipWindow.height}`
+          );
+        });
+
+        video.addEventListener("leavepictureinpicture", function (event) {
+          console.log("Left PiP");
+          togglePipButton.disabled = false;
+        });
+
+        if ("pictureInPictureEnabled" in document) {
+          showPipButton();
+          video.addEventListener("loadedmetadata", showPipButton);
+          video.addEventListener("emptied", showPipButton);
+        } else {
+          togglePipButton.hidden = true;
+        }
+
+        function showPipButton() {
+          togglePipButton.disabled =
+            video.readyState === 0 ||
+            !document.pictureInPictureEnabled ||
+            video.disablePictureInPicture;
+        }
+      }
+    </script>
+  </body>
+</html>
